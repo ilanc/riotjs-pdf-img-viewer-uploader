@@ -1,38 +1,27 @@
 <app>
-	<div>
-		<!--Header-->
-		<header>PDF/Image Viewer/Uploader</header>
+  <header>PDF/Image Viewer/Uploader</header>
 
-		<!-- Screen -->
-		<section>
-			<h2>Download</h2>
-			<button class="fa fa-file" type="button" onclick={clickDownload}> Download</button>
-			<pdf-img-viewer-uploader></pdf-img-viewer-uploader>
-		</section>
+  <section>
+    <h2>Download</h2>
+    <button class="fa fa-file" type="button" onclick={clickDownload}> Download</button>
+    <pdf-img-viewer-uploader></pdf-img-viewer-uploader>
+  </section>
 
-		<section>
-			<h2>Upload with popup &amp; progress bar</h2>
-			<pdf-img-viewer-uploader></pdf-img-viewer-uploader>
-			<button class="fa fa-arrow-right" type="button" onclick={clickNext}> Next</button>
-		</section>
-	</div>
+  <section>
+    <h2>Upload with popup &amp; progress bar</h2>
+    <pdf-img-viewer-uploader></pdf-img-viewer-uploader>
+    <button class="fa fa-arrow-right" type="button" onclick={clickNext}> Next</button>
+  </section>
 
 	<footer>Trust ID 2017</footer>
 
 	<!-- Popups -->
 	<popup>
 		<h2>Downloading image...</h2>
-    <p>
-      TESTING
-    </p>
 	</popup>
 
 	<!-- App code -->
 	<script>
-		// 2. fix popup.tag.html
-		//		html and css - from site.css and identity.tag
-		//		yield title/content, div clear?
-
 		// 3. fix pdf-img-viewer-uploader
 		//		html and css - from site.css and identity.tag
 		//		download on click

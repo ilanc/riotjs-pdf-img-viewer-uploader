@@ -11,6 +11,8 @@
     "build-popup": "webpack --progress --colors --display-modules --config src/popup/webpack.config.js",
     "build-popup-imgs": "find src -iname *.svg  ! -path \"src/all/*\" | sed -e \"p;s/src\\/[^\\/]*/dist\\/popup/\" | xargs -n2 cp",
     "open-popup": "node open.js dist/popup/index.html",
+    "build-progress-bar": "webpack --progress --colors --display-modules --config src/progress-bar/webpack.config.js",
+    "open-progress-bar": "node open.js dist/progress-bar/index.html",
     "build-spinner": "webpack --progress --colors --display-modules --config src/spinner/webpack.config.js",
     "open-spinner": "node open.js dist/spinner/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
