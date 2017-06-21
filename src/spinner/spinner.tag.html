@@ -1,6 +1,6 @@
 <spinner>
   <div ref="spin" show={started}>
-    <div class="sk-wave" style="margin: 0;">
+    <div class="sk-wave" style={ styles }>
       <div class="sk-rect sk-rect1"></div>
       <div class="sk-rect sk-rect2"></div>
       <div class="sk-rect sk-rect3"></div>
@@ -19,6 +19,24 @@
 
     var tag = this
     tag.started = opts.start
+
+    var centeredStyle = {
+      "margin-top": 0,
+      "margin-bottom": 0
+    }
+
+    var leftAlignedStyle = {
+      "margin": 0
+    }
+
+    this.Center = function(centered) {
+      if (centered) {
+        tag.styles = centeredStyle
+      } else {
+        tag.styles = leftAlignedStyle
+      }
+    }
+    this.Center(opts.centered)
 
     this.Start = () => {
       tag.started = true

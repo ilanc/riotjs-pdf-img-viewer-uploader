@@ -1,33 +1,54 @@
 <app>
   <header>Spinner</header>
-  <button class="fa fa-play" type="button" onclick={clickStart}> Start</button>
-  <button class="fa fa-stop" type="button" onclick={clickStop}> Stop</button>
-  <div style="margin-top:10px;">
-    <spinner></spinner>
-  </div>
-	<footer>Trust ID 2017</footer>
 
-	<script>
-		console.log('app.tag.html')
+  <section>
+    <h1>Centred</h1>
+    <button class="fa fa-play" type="button" onclick={clickStartC}> Start</button>
+    <button class="fa fa-stop" type="button" onclick={clickStopC}> Stop</button>
+    <div style="margin-top:10px;">
+      <spinner centered="true"></spinner>
+    </div>
+  </section>
 
-		import '../spinner/spinner.tag.html'
+  <section>
+    <h1>Left-aligned</h1>
+    <button class="fa fa-play" type="button" onclick={clickStartLA}> Start</button>
+    <button class="fa fa-stop" type="button" onclick={clickStopLA}> Stop</button>
+    <div style="margin-top:10px;">
+      <spinner></spinner>
+    </div>
+  </section>
 
-		var tag = this
+  <footer>Trust ID 2017</footer>
 
-		// DEBUG: console hacking
-		window.app = tag
+  <script>
+    console.log('app.tag.html')
 
-		this.on('mount', function(){
-			tag.spinner = this.tags['spinner'];
-		})
+    import '../spinner/spinner.tag.html'
 
-		this.clickStart = (e) => {
-			tag.spinner.Start()
+    var tag = this
+
+    // DEBUG: console hacking
+    window.app = tag
+
+    this.on('mount', function () {
+      tag.spinner = this.tags['spinner'];
+    })
+
+    this.clickStartC = (e) => {
+      tag.spinner[0].Start()
     }
 
-    this.clickStop = (e) => {
-			tag.spinner.Stop()
+    this.clickStopC = (e) => {
+      tag.spinner[0].Stop()
     }
 
-	</script>
+    this.clickStartLA = (e) => {
+      tag.spinner[1].Start()
+    }
+
+    this.clickStopLA = (e) => {
+      tag.spinner[1].Stop()
+    }
+  </script>
 </app>

@@ -18,22 +18,23 @@
 	<!-- Popups -->
 	<popup>
 		<h2>Downloading image...</h2>
+    <div style="margin-top: 20px;">
+      <spinner centered="true"></spinner>
+    </div>
 	</popup>
 
 	<!-- App code -->
 	<script>
-		// 3. fix pdf-img-viewer-uploader
-		//		html and css - from site.css and identity.tag
-		//		download on click
-		// 		during download popup and spinner
-		//		<spinner>
+		// 3. pdf-img-viewer-uploader = download & view
+		//		download on click = express
+		//		html and css = from site.css and identity.tag
 
+		// 4. pdf-img-viewer-uploader download = file-open and upload
 		//		click pdf-img-viewer-uploader = file open
 		//		upload on click next
 		// 		during upload popup and spinner
 
-		// 4. Future = webcam for laptop
-
+		// 5. Future = webcam for laptop
 
 		console.log('app.tag.html')
 
@@ -42,6 +43,8 @@
 		import "../../node_modules/UploaderJS/uploader.js" // adds window.Uploader
 		import './pdf-img-viewer-uploader.tag.html'
 		import '../popup/popup.tag.html'
+		import '../spinner/spinner.tag.html'
+    import { jqueryToTag } from '../all/riot-helper.js'
 
 		var tag = this
 
@@ -49,12 +52,13 @@
 		window.app = tag
 
 		this.on('mount', function(){
-			tag.popup = this.tags['popup'];
+			tag.popup = this.tags['popup']
+      tag.spinner = jqueryToTag('spinner', tag.tags.popup) // ref="spinner" doesn't seem to work on <yield>d DOM
 		})
 
 		this.clickDownload = (e) => {
-			// show popup
 			tag.popup.Show()
+      tag.spinner.Start()
 
 			// download = fetch + express.json
 			// on response = close popup,
