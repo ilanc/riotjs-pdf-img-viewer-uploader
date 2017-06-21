@@ -1,0 +1,216 @@
+<pdf-img-viewer-uploader>
+	<div class="viewer"></div>
+
+  <style>
+		.viewer {
+			width: 100px;
+			height: 100px;
+			border-color: 1px solid red;
+			background-color: lightgray;
+		}
+  </style>
+
+	<!-- Popups -->
+	<popup>
+		<h2>Uploading image...</h2>
+		<div class="clear">&nbsp;</div>
+		<progress-bar w="0" h="20px"></progress-bar>
+	</popup>
+
+	<script>
+		console.log('pdf-img-viewer-uploader.tag.html')
+		import '../popup/popup.tag.html'
+		import '../progress-bar/progress-bar.tag.html'
+
+		var tag = this
+
+		// DEBUG: console hacking
+		if (!window.viewer) {
+			window.viewer = []
+		}
+		window.viewer.push(tag)
+		tag.ShowPopup = ShowPopup
+		// end DEBUG
+
+		tag.progressBar = tag.tags['progress-bar']
+
+		tag.on('mount', function () {
+			Init()
+		})
+
+		tag.InitedOnce = false
+		function Init() {
+			if (!tag.InitedOnce) {
+				tag.InitedOnce = true
+
+				$("#fileUpload").on('change', function () {
+					SetPic()
+				})
+				$(".tr-button-remove").click(function () {
+					RemovePic()
+				})
+
+				tag.progressBar = tag.tags['progress-bar']
+				tag.uploader = initUploader("#fileUpload", "/upload/", "idPicture", UploadProgress, UploadComplete, UploadNetworkError)
+			}
+		}
+
+		////
+
+		function ShowPopup() {
+			$('.tr-overlay').fadeIn()
+			$('.tr-popup').fadeIn()
+		}
+
+		function HidePopup() {
+			$('.tr-overlay').fadeOut()
+			$('.tr-popup').fadeOut()
+		}
+
+		function SetPic() {
+			var countFiles = $('#fileUpload')[0].files.length
+			var imgPath = $('#fileUpload')[0].value
+			var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase()
+			var image_holder = $(".tr-photo-thumbnail")
+			var remove = $(".tr-button-remove")
+			var error = $("#upload-error")
+			image_holder.empty()
+
+			if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+				if (typeof (FileReader) != "undefined") {
+					for (var i = 0; i < countFiles; i++) {
+						var reader = new FileReader()
+						reader.onload = function (e) {
+							$("<img />", {
+								"src": e.target.result,
+								"class": "tr-thumb-image"
+							}).appendTo(image_holder)
+						}
+						image_holder.show()
+						reader.readAsDataURL($('#fileUpload')[0].files[i])
+						remove.show()
+						error.hide()
+						$('#picker-camera-button').hide()
+					}
+				} else {
+					error.show().html("This browser does not support FileReader.")
+				}
+			} else {
+				error.show().text("Please upload a valid image format. Supported formats are: .gif, .png, .jpg, and .jpeg.")
+				remove.hide()
+				image_holder.hide()
+			}
+		}
+
+		function RemovePic() {
+			$('.tr-button-remove').hide()
+			$('.tr-thumb-image').remove()
+			$('.tr-photo-thumbnail').hide()
+			$('#picker-camera-button').show()
+		}
+
+		//#region Upload file
+
+		tag.uploader = undefined
+		function UploadPic() {
+			// TODO: 3 options
+			//  1: nothing changed since previous submit - don't send anything
+			//  2: just data changed
+			//  3: data and picture changed
+			//var blob = new Blob([JSON.stringify(_State)], { type: "application/json" })
+			//tag.uploader.options.data = { json: blob }
+			if (tag.uploader.anyUploadsPending()) {
+				ShowPopup()
+				tag.uploader.uploadAll()
+			}
+			tag.uploader.options.data = null
+		}
+
+		function round(value, digits) {
+			return +value.toFixed(digits)
+		}
+
+		function percentSign(value) {
+			return round(value * 100, 0) + '%'
+		}
+
+		function percent(value) {
+			return round(value * 100, 0)
+		}
+
+		function UploadProgress(uniqueId, name, loaded, total) {
+			var perc = percent(loaded / total)
+			tag.progressBar.Update(perc + '%')
+		}
+
+		function UploadComplete(uniqueId, name, response, status, xhr) {
+			console.log(response)
+			response = JSON.parse(response)
+			if (response.result === "success") {
+				HidePopup()
+				NextScreen()
+			} else {
+				// TODO
+				HidePopup()
+				alert('Failed to upload the file to the server. Please try again.')
+			}
+		}
+
+		function UploadNetworkError(uniqueId, name, response, status, xhr) {
+			// TODO
+			alert('Network error: Failed to upload ' + name)
+			HidePopup()
+		}
+
+		function NextScreen() {
+			alert('Next Screen')
+		}
+
+		///////
+
+		function initUploader(input, url, doc, uploadProgress, uploadComplete, uploadNetworkError) {
+			var uploader = new Uploader({
+				// Setup
+				existingInput: input,
+				autoUpload: false,
+				// Upload
+				url: url,
+				name: doc,
+				multiple: false,
+				data: null, // set before uploadAll - see UploadPic
+				headers: {
+					//'trustid-csrf': __CSRF TODO session ID
+				}
+			})
+			uploader
+				.on("uploadProgress", function (uniqueId, name, loaded, total) {
+					uploadProgress(uniqueId, name, loaded, total)
+				})
+
+				.on("uploadComplete", function (uniqueId, name, response, status, xhr) {
+					if (status === 200) {
+						// success
+						uploadComplete(uniqueId, name, response, status, xhr)
+					} else {
+						// error
+						uploadNetworkError(uniqueId, name, response, status, xhr)
+					}
+				})
+
+				.on("uploadAbort", function () {
+					// TODO?
+					console.log("uploadAbort", arguments)
+				})
+
+				.on("uploadFail", function () {
+					// TODO
+					console.log("uploadFail", arguments)
+				})
+
+			return uploader
+		}
+
+    //#endregion
+
+  </script>
+</pdf-img-viewer-uploader>

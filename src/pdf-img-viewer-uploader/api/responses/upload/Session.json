@@ -1,0 +1,6 @@
+{
+  "result": "fail",
+  "errorCode": 0,
+	"sessionErrorCode": 0,
+  "message": "No session cookie"
+}

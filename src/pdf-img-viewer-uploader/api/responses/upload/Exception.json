@@ -1,0 +1,5 @@
+{
+  "result": "fail",
+  "errorCode": 2,
+  "message": "some exception occurred"
+}

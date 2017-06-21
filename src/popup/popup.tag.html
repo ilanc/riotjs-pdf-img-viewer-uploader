@@ -1,0 +1,70 @@
+<popup>
+  <div class="overlay" show={open}></div>
+  <div class="popup" show={open}>
+    <a class="button-close" onclick={Hide}><img src="icon-close.svg" height="20"></a>
+    <!-- title & content -->
+    <yield/>
+  </div>
+
+  <style type="text/css">
+    .overlay {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      opacity: .6;
+      z-index: 9999;
+    }
+
+    .popup {
+      width: 350px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      padding: 15px;
+      background: #fff;
+      z-index: 99999;
+      text-align: center;
+      border-radius: 2px;
+    }
+
+    .popup .button-close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+
+    .popup h2 {
+      font-size: 25px;
+      color: #3498db;
+      margin-bottom: 20px;
+    }
+
+    .popup p {
+      font-size: 15px;
+      color: #000;
+      line-height: 20px;
+    }
+  </style>
+
+  <script>
+    console.log('popup.tag.html')
+
+    var tag = this
+    tag.open = opts.open
+
+    this.Show = () => {
+      tag.open = true
+      tag.update()
+    }
+
+    this.Hide = () => {
+      tag.open = false
+      tag.update()
+    }
+  </script>
+</popup>

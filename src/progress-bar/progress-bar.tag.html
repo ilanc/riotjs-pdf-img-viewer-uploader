@@ -1,0 +1,47 @@
+<progress-bar>
+	<div class="striped active" style="width:{this.widthPerc};height:{opts.h};"></div>
+
+	<style type="text/css">
+		progress-bar > div {
+			/*float: left;*/
+			font-size: 12px;
+			line-height: 20px;
+			color: #fff;
+			text-align: center;
+			background-color: #337ab7;
+			-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+			box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+			-webkit-transition: width .6s ease;
+			-o-transition: width .6s ease;
+			transition: width .6s ease;
+		}
+
+		progress-bar > div.striped {
+			background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+			background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+			background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+			-webkit-background-size: 40px 40px;
+			background-size: 40px 40px;
+		}
+
+		progress-bar > div.active {
+			-webkit-animation: progress-bar-stripes 2s linear infinite;
+			-o-animation: progress-bar-stripes 2s linear infinite;
+			animation: progress-bar-stripes 2s linear infinite;
+		}
+	</style>
+
+	<script>
+		console.log('shared/progress-bar.tag.html')
+		import $ from 'jquery'
+
+		var tag = this
+		tag.widthPerc = opts.w || 0
+		tag.height = opts.h || '20px'
+
+		this.Update = (perc) => {
+			//$(this.bar).css('width', perc)
+			tag.widthPerc = perc
+		}
+	</script>
+</progress-bar>

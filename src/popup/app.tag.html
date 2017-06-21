@@ -1,0 +1,33 @@
+<app>
+  <header>Popup</header>
+  <button class="fa fa-file" type="button" onclick={clickOpenPopup}> Open Popup</button>
+	<footer>Trust ID 2017</footer>
+
+	<!-- Popup -->
+	<popup>
+		<h2>Ok I'm open</h2>
+    <p>
+      Try pusing the close button
+    </p>
+	</popup>
+
+	<script>
+		console.log('app.tag.html')
+
+		import '../popup/popup.tag.html'
+
+		var tag = this
+
+		// DEBUG: console hacking
+		window.app = tag
+
+		this.on('mount', function(){
+			tag.popup = this.tags['popup'];
+		})
+
+		this.clickOpenPopup = (e) => {
+			tag.popup.Show()
+    }
+
+	</script>
+</app>
