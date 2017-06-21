@@ -19,7 +19,7 @@
 	<popup>
 		<h2>Downloading image...</h2>
     <div style="margin-top: 20px;">
-      <spinner centered="true"></spinner>
+      <spinner centered="true" start="true"></spinner>
     </div>
 	</popup>
 
@@ -58,7 +58,6 @@
 
 		this.clickDownload = (e) => {
 			tag.popup.Show()
-      tag.spinner.Start()
 
 			// download = fetch + express.json
 			// on response = close popup,
