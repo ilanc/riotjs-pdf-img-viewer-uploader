@@ -1,0 +1,33 @@
+<app>
+  <header>Spinner</header>
+  <button class="fa fa-play" type="button" onclick={clickStart}> Start</button>
+  <button class="fa fa-stop" type="button" onclick={clickStop}> Stop</button>
+  <div style="margin-top:10px;">
+    <spinner></spinner>
+  </div>
+	<footer>Trust ID 2017</footer>
+
+	<script>
+		console.log('app.tag.html')
+
+		import '../spinner/spinner.tag.html'
+
+		var tag = this
+
+		// DEBUG: console hacking
+		window.app = tag
+
+		this.on('mount', function(){
+			tag.spinner = this.tags['spinner'];
+		})
+
+		this.clickStart = (e) => {
+			tag.spinner.Start()
+    }
+
+    this.clickStop = (e) => {
+			tag.spinner.Stop()
+    }
+
+	</script>
+</app>

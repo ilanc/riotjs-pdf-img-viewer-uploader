@@ -1,124 +1,15 @@
-﻿@import 'https://fonts.googleapis.com/css?family=Ubuntu';
+﻿@import 'https://fonts.googleapis.com/css?family=Roboto';
 
-/* HTML 5 Reset */
-*{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box}
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
-body{line-height:1;background: #ecf0f1;}
-ol,ul{list-style:none}
-blockquote,q{quotes:none}
-blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
-table{border-collapse:collapse;border-spacing:0}
-
-/* General */
-html,body{height:100%}
-body{font-family:'Ubuntu',sans-serif;-webkit-overflow-scrolling:touch}
-.tr-text-center {text-align:center}
-.clear{clear:both}
-
-/* Links */
-a {color:#3498db;text-decoration:none;transition:all .5s}
-a:hover, a:focus {opacity:.7}
-
-/* Layout Elements */
-.tr-wrapper{min-height:100%;margin:0 auto -30px;width:1000px;background:#ecf0f1}
-.tr-block{text-align:center}
-.tr-block:before{content:'';display:inline-block;height:100%;vertical-align:middle;margin-right:-.25em}
-.tr-centered{display:inline-block;vertical-align:middle}
-
-/* Popup */
-.tr-overlay{position:fixed;top:0;bottom:0;height:100%;left:50%;margin-left:-500px;width:1000px;background:#000;opacity:.6;z-index:9999;display:none}
-.tr-popup{width:350px;position:absolute;transform: translate(-50%, -50%);top:50%;left:50%;padding:15px;background:#fff;z-index:99999;text-align:center;border-radius:2px;display:none}
-.tr-popup .tr-button-close{position:absolute;top:5px;right:5px}
-.tr-popup h2{font-size:25px;color:#3498db;margin-bottom:20px}
-.tr-popup p{font-size:15px;color:#3498db;line-height:20px}
-
-/* Header */
-header{height:50px;padding:0 15px}
-header .tr-tagline{position:relative;color:#3498db;font-size:12px;top:25px}
-header .tr-logo{position:absolute;left:50%;top:10px;-webkit-transform:translateX(-50%);transform:translateX(-50%)}
-
-/* Steps */
-.tr-steps{height:135px;background:#3498db;text-align:center}
-.tr-login{background:#27ae60 !important;}
-.tr-steps h1{font-size:25px;color:#fff;font-weight:400;text-transform:uppercase;margin-top:20px}
-.tr-steps ul li{display:inline-block;width:38px;height:38px;background:#fff;font-size:22px;color:#3498db;border-radius:50%;line-height:38px;opacity:.4;margin-right:30px}
-.tr-steps ul li:last-child{margin-right:0}
-.tr-steps ul li.tr-active{opacity:1}
-
-/* Content */
-.tr-content {width:400px;margin:30px auto 0;}
-.tr-content p, .tr-question {font-size:15px;color:#3498db;padding:0 20px;line-height:20px;margin-bottom:30px}
-.tr-content .tr-validation{margin-bottom:30px}
-.tr-content .tr-validation p.tr-error{color:#ff3300;text-align:center;margin-bottom:0}
-.tr-content .tr-validation p.tr-correct{color:#27ae60;text-align:center;margin-bottom:0}
-
-/* Footer */
-footer,.tr-push{height:30px;text-align:center;color:#231f20;font-size:10px}
-
-/* Form Controls */
-.tr-form-control{margin-bottom:20px}
-.tr-form-control:disabled{cursor:not-allowed;background-color:#fff;color:#231f20;-webkit-text-fill-color:#231f20;opacity:1}
-.tr-label{color:#7a8d8e;display:block;font-size:15px;font-weight:400;line-height:normal;margin-bottom:5px;padding:0 20px}
-[type="text"],[type="password"],[type="date"],[type="datetime"],[type="datetime-local"],[type="month"],[type="week"],[type="email"],[type="number"],[type="search"],[type="tel"],[type="time"],[type="url"],[type="color"],textarea{-moz-appearance:none;-webkit-appearance:none;background-color:#fff;border:none;border-radius:3px;box-sizing:border-box;color:#231f20;display:block;font-family:inherit;font-size:15px;height:40px;padding:8px;width:100%;outline:none;}
-select{-moz-appearance:none;-webkit-appearance:none;-ms-appearance:none;appearance:none;background-color:#fff;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIpJREFUeNrEkckNgDAMBBfRkEt0ObRBBdsGXUDgmQfK4XhH2m8czQAAy27R3tsw4Qfe2x8uOO6oYLb6GlOor3GF+swURAOmUJ+RwtEJs9WvTGEYxBXqI1MQAZhCfUQKRzDMVj+TwrAIV6jvSUEkYAr1LSkcyTBb/V+KYfX7xAeusq3sLDtGH3kEGACPWIflNZfhRQAAAABJRU5ErkJggg==");background-origin:content-box;background-position:right -1rem center;background-repeat:no-repeat;background-size:9px 6px;border:none;border-radius:3px;color:#231f20;font-family:inherit;font-size:15px;height:40px;line-height:normal;margin:0 0 1rem;padding:8px 30px 8px 8px;width:100%;outline:none}
-select::-ms-expand {display:none}
-select:disabled{cursor:not-allowed;background-color:#fff;color:#231f20;opacity:1}
-.tr-select{position:relative;display:inline-block;z-index:0;width:100%}
-.tr-select select{z-index:1}
-.tr-select:before{display:block;position:absolute;content:'';right:28px;top:0;height:35px;width:20px;margin:2px;background:#fff;z-index:5}
-.tr-show-for-sr{clip:rect(0px,0px,0px,0px);height:1px;overflow:hidden;position:absolute!important;width:1px}
-
-/* Placeholders */
-input::-moz-placeholder{color:#c1c4c5}
-input::-webkit-input-placeholder{color:#c1c4c5}
-input:-ms-input-placeholder{color:#c1c4c5}
-select:required:invalid{color:#c1c4c5;}
-option[value=""][disabled]{display:none}
-option{color:#231f20}
-
-/* Buttons */
-.tr-buttons {text-align:center;margin-top:50px;margin-bottom:30px}
-.tr-button{background-color:#3498db;border:1px solid transparent;border-radius:0;color:#fff;cursor:pointer;display:inline-block;line-height:1;padding:8px 12px;text-align:center;height:40px;vertical-align:middle;font-family:inherit;transition:all .5s}
-.tr-button:hover, .tr-button:focus {opacity:.7}
-.tr-button-success {background-color:#27ae60;font-size:20px;width:200px;border-radius:25px;margin-bottom:10px;}
-.tr-button-info {background-color:#3498db;font-size:20px;width:200px;border-radius:25px;margin-bottom:10px;}
-.tr-button-upload {width:100%;background-color:#fff;border-radius:3px;height:140px;padding:45px 0 0 0;margin-bottom:30px}
-.tr-button-remove {display:none;position:absolute;top:5px;right:5px;z-index:2;}
-
-/* Input Group */
-.tr-input-group{display:table;margin-bottom:1rem;width:100%;margin-bottom:30px}
-.tr-input-group > :first-child{border-radius:3px 0 0 3px}
-.tr-input-group > :last-child > *{border-radius:0 3px 3px 0}
-.tr-input-group-label,.tr-input-group-field,.tr-input-group-button{display:table-cell;margin:0;vertical-align:middle;white-space:nowrap}
-.tr-input-group-label{background:#e6e6e6 none repeat scroll 0 0;border:1px solid #cacaca;color:#0a0a0a;height:100%;padding:0 1rem;text-align:center;white-space:nowrap;width:1%}
-.tr-input-group-label:first-child{border-right:0 none}
-.tr-input-group-label:last-child{border-left:0 none}
-.tr-input-group-field{border-radius:0;height:2.5rem}
-.tr-input-group-button{height:100%;padding-bottom:0;padding-top:0;text-align:center;width:1%}
-.tr-input-group-button a,.tr-input-group-button input,.tr-input-group-button button{margin:0}
-.tr-input-group .tr-input-group-button{display:table-cell}
-
-/* Photo Upload */
-.tr-photo-preview{position:relative;width:100%}
-.tr-photo-thumbnail {width:100%; height:100%; background:#fff;border-radius:3px;margin-bottom:15px;display:none;  padding:15px 50px; z-index:1;}
-.tr-photo-thumbnail > img { width: 100%;height: auto;}
-
-/* Document Thumbnail */
-.tr-document-thumbnail {width:100%;height:550px;background:#fff;border-radius:3px;margin-bottom:15px;padding:15px}
-
-/* Ilan */
-.data-records { margin-left: 40px; list-style: circle; }
-.data-records li { margin-top: 10px; font-size: 16px; cursor: pointer; }
-
-@media (max-width:1024px){
-.tr-wrapper {width:100%}
-.tr-overlay {margin-left:0;left:0;right:0;width:100%}
-}
-@media (max-width:767px){
-header .tr-tagline{font-size:9px;top:30px}
-.tr-steps ul li {width:35px;height:35px;font-size:22px;line-height:35px;margin-right:10px;}
-.tr-content {width:280px}
-.tr-popup {width:280px}
-.tr-document-thumbnail {height:380px}
+header {
+  font-size: 36px;
+  line-height: 40px;
+  width: 100%;
+  font-weight: bold;
+  color: black;
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+  text-align: center;
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
