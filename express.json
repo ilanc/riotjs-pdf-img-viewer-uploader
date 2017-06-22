@@ -2,7 +2,7 @@
 	"1": {
 		"description": "Happy path",
 		/* Download */
-		"/download/": { "response": "src/pdf-img-viewer-uploader/api/responses/download/fica.pdf", "delay": 2000 },
+		"/download/": "src/pdf-img-viewer-uploader/api/responses/download/fica.pdf",
 		/* Upload */
 		"/upload/": { "response": "src/pdf-img-viewer-uploader/api/responses/upload/success.json", "delay": 3000 }
 	}
