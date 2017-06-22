@@ -49,5 +49,14 @@
       tag.refs.spin.style.display = "none"
       tag.update()
     }
+
+    this.Toggle = () => {
+      if (tag.started) {
+        tag.Stop()
+      } else {
+        tag.Start()
+      }
+    }
+
   </script>
 </spinner>

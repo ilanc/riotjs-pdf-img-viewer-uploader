@@ -9,12 +9,16 @@
     <p>
       Try pusing the close button
     </p>
+    <button type="button" onclick={parent.clickToggleSpinner}>Toggle spinner</button> <!-- shows how to call functions on parent tag -->
+    <spinner centered="true" start="true"></spinner> <!-- shows how to access tags inside popup from parent - can't use [ref="spinner"] in <yield>'d DOM -->
 	</popup>
 
 	<script>
 		console.log('app.tag.html')
 
 		import '../popup/popup.tag.html'
+		import '../spinner/spinner.tag.html'
+    import { jqueryToTag } from '../all/riot-helper.js'
 
 		var tag = this
 
@@ -23,11 +27,15 @@
 
 		this.on('mount', function(){
 			tag.popup = this.tags['popup'];
+      tag.spinner = jqueryToTag('spinner', tag.tags.popup)
 		})
 
 		this.clickOpenPopup = (e) => {
 			tag.popup.Show()
     }
 
+    this.clickToggleSpinner = (e) => {
+      tag.spinner.Toggle()
+    }
 	</script>
 </app>
