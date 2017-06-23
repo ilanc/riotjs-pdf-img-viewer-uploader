@@ -132,9 +132,6 @@
 
     this.FileOpen = () => {
       var input = tag.input
-      console.log(tag._riot_id, input)
-      debugger
-
       var countFiles = input.files.length
       if (countFiles === 0) {
         return  // cancelled
