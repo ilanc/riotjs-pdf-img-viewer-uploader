@@ -14,3 +14,7 @@ export function jqueryToTag(selector, startNode) {
     return undefined;
   return el[0]._tag;
 }
+
+export function tagToJquery(tag) {
+
+}

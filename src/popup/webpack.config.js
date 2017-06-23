@@ -52,10 +52,6 @@ module.exports = {
       hash: true,
       template: './src/popup/index.html',
       filename: 'index.html'
-    }),
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"	// for UploaderJS
     })
   ]
 };

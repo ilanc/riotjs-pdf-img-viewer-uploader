@@ -67,7 +67,7 @@ module.exports = {
       filename: 'index.html'
     }),
     new webpack.ProvidePlugin({
-      $: 'jquery',
+      //$: 'jquery',
       jQuery: 'jquery'	// for UploaderJS
     })
   ]

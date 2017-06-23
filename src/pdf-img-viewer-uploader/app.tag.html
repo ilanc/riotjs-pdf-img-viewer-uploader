@@ -2,31 +2,22 @@
   <header>PDF/Image Viewer/Uploader</header>
 
   <section>
-    <h2>Download</h2>
+    <h2>Download &amp; view</h2>
     <button class="fa fa-file" type="button" onclick={clickDownload}> Download</button>
-    <pdf-img-viewer-uploader></pdf-img-viewer-uploader>
+    <pdf-img-viewer-uploader wrapper="width:200px;border:2px solid black;"></pdf-img-viewer-uploader>
   </section>
 
   <section>
-    <h2>Upload with popup &amp; progress bar</h2>
+    <h2>File open &amp; view - with upload on Next</h2>
     <pdf-img-viewer-uploader></pdf-img-viewer-uploader>
     <button class="fa fa-arrow-right" type="button" onclick={clickNext}> Next</button>
   </section>
 
 	<footer>Trust ID 2017</footer>
 
-	<!-- Popups -->
-	<popup>
-		<h2>Downloading image...</h2>
-    <div style="margin-top: 20px;">
-      <spinner centered="true" start="true"></spinner>
-    </div>
-	</popup>
-
 	<!-- App code -->
 	<script>
 		// 3. pdf-img-viewer-uploader = download & view
-		//		download on click = express
 		//		.js to view img/pdf, .html and .css = from site.css and identity.tag, proof-of-address.tag
 
 		// 4. pdf-img-viewer-uploader download = file-open and upload
@@ -40,11 +31,7 @@
 
 		import $ from 'jquery'
 		import '../../node_modules/font-awesome/css/font-awesome.css'
-		import "../../node_modules/UploaderJS/uploader.js" // adds window.Uploader
 		import './pdf-img-viewer-uploader.tag.html'
-		import '../popup/popup.tag.html'
-		import '../spinner/spinner.tag.html'
-    import { jqueryToTag } from '../all/riot-helper.js'
 
 		var tag = this
 
@@ -52,20 +39,20 @@
 		window.app = tag
 
 		this.on('mount', function(){
-			tag.popup = this.tags['popup']
-      tag.spinner = jqueryToTag('spinner', tag.tags.popup) // ref="spinner" doesn't seem to work on <yield>d DOM
+      let viewers = this.tags['pdf-img-viewer-uploader']
+      tag.viewer0 = viewers[0] // viewer for the "Download & view" demo
+      tag.viewer1 = viewers[1] // viewer for the "File open & view" demo
 		})
 
 		this.clickDownload = (e) => {
-			tag.popup.Show()
+      const url = '/download/'
+      tag.viewer0.DownloadAndDisplay(url)
 
-			// download = fetch + express.json
 			// on response = close popup,
 			//		then show img = fix viewer
 		}
 
 		this.clickNext = (e) => {
-			UploadPic()
 		}
 
 	</script>

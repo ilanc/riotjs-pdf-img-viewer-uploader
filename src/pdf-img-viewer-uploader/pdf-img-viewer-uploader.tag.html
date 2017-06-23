@@ -1,216 +1,268 @@
 <pdf-img-viewer-uploader>
-	<div class="viewer"></div>
-
   <style>
-		.viewer {
-			width: 100px;
-			height: 100px;
-			border-color: 1px solid red;
-			background-color: lightgray;
-		}
+    /* Photo Upload */
+    .tr-photo-preview{position:relative;width:100%;}
+    .tr-photo-thumbnail {width:100%; height:100%; background:#fff;border-radius:3px;padding:10px 10px; z-index:1;box-sizing: border-box;}
+    .tr-photo-thumbnail > img { width: 100%;height: auto;}
+
+    /* Form Controls */
+    .tr-show-for-sr{clip:rect(0px,0px,0px,0px);height:1px;overflow:hidden;position:absolute!important;width:1px;}
+
+    /* Buttons */
+    .tr-button {color:#fff;cursor:pointer;display:inline-block;line-height:1;text-align:center;vertical-align:middle;font-family:inherit;transition:all .5s;}
+    .tr-button:hover, .tr-button:focus {opacity:.7;}
+    .tr-button-upload {width:100%;background-color:#fff;border-radius:3px;height:140px;padding:45px 0 0 0;margin-bottom:30px;}
+    .tr-button-remove {position:absolute;top:5px;right:5px;z-index:2;}
+
+    /* Content */
+    .tr-validation{margin-bottom:30px;}
+    .tr-validation p.tr-error{color:#ff3300;text-align:center;margin-bottom:0;}
+    .tr-validation p.tr-correct{color:#27ae60;text-align:center;margin-bottom:0;}
   </style>
+  <div style={ opts.wrapper }>
+    <div class="tr-photo-preview" show={rendered}>
+      <a class="tr-button-remove" onclick={Remove}><img src="icon-close.svg" height="20"></a>
+      <div class="tr-photo-thumbnail" ref="viewer"></div>
+    </div>
+    <label class="tr-button tr-button-upload" for="fileopen{_riot_id}" show={!rendered} ref="label">
+      <img src="icon-camera.svg" alt="Upload photo" height="38">
+    </label>
+    <input id="fileopen{_riot_id}" type="file" class="tr-show-for-sr" ref="input" onchange={FileOpen}>
+    <div class="tr-validation">
+      <p class="tr-error" ref="error"></p>
+      <!-- replace with popup? -->
+    </div>
+  </div>
 
-	<!-- Popups -->
-	<popup>
-		<h2>Uploading image...</h2>
-		<div class="clear">&nbsp;</div>
-		<progress-bar w="0" h="20px"></progress-bar>
-	</popup>
+  <!-- Popups -->
+  <popup>
+    <h2>Downloading ...</h2>
+    <div style="margin-top: 20px;">
+      <spinner centered="true" start="true"></spinner>
+    </div>
+  </popup>
+  <popup>
+    <h2>Uploading ...</h2>
+    <div style="margin-top: 20px;">
+      <progress-bar w="0" h="20px"></progress-bar>
+    </div>
+  </popup>
 
-	<script>
-		console.log('pdf-img-viewer-uploader.tag.html')
-		import '../popup/popup.tag.html'
-		import '../progress-bar/progress-bar.tag.html'
+  <script>
+    console.log('pdf-img-viewer-uploader.tag.html')
 
-		var tag = this
+    import $ from 'jquery'
+    import 'whatwg-fetch' // adds window.fetch
+    import "../../node_modules/UploaderJS/uploader.js" // adds window.Uploader
+    import '../popup/popup.tag.html'
+    import '../progress-bar/progress-bar.tag.html'
+    import '../spinner/spinner.tag.html'
 
-		// DEBUG: console hacking
-		if (!window.viewer) {
-			window.viewer = []
-		}
-		window.viewer.push(tag)
-		tag.ShowPopup = ShowPopup
-		// end DEBUG
+    // DEBUG: console hacking
+    if (!window.viewer) {
+      window.viewer = []
+    }
+    window.viewer.push(this)
+    // end DEBUG
 
-		tag.progressBar = tag.tags['progress-bar']
+    let tag = this
+    tag.rendered = false
 
-		tag.on('mount', function () {
-			Init()
-		})
+    this.on('mount', function () {
+      console.log('mount pdf-img-viewer-uploader', this._riot_id)
+      // child tags
+      tag.progressBar = tag.tags['progress-bar']
+      let popups = this.tags['popup']
+      tag.popup0 = popups[0]
+      tag.popup1 = popups[1]
 
-		tag.InitedOnce = false
-		function Init() {
-			if (!tag.InitedOnce) {
-				tag.InitedOnce = true
+      // DOM elements
+      tag.input = tag.refs['input']
+      tag.label = tag.refs['label']
+      tag.error = tag.refs['error']
+      tag.viewer = tag.refs['viewer']
 
-				$("#fileUpload").on('change', function () {
-					SetPic()
-				})
-				$(".tr-button-remove").click(function () {
-					RemovePic()
-				})
+      // UploaderJS
+      tag.uploader = initUploader("#fileopen" + this._riot_id, "/upload/", "idPicture", UploadProgress, UploadComplete, UploadNetworkError)
+    })
 
-				tag.progressBar = tag.tags['progress-bar']
-				tag.uploader = initUploader("#fileUpload", "/upload/", "idPicture", UploadProgress, UploadComplete, UploadNetworkError)
-			}
-		}
+    //// Download & Render
 
-		////
+    this.DownloadAndRender = async (url) => {
+      try {
+        tag.popup.Show()
+        var buf = await Download(url)
+        tag.popup.Hide()
+        await Render(buf)
+      } catch (error) {
+        tag.popup.Hide()
+        alert(error) // TODO: display error in <popup> => how to create tags on the fly in riotjs?
+      }
+    }
 
-		function ShowPopup() {
-			$('.tr-overlay').fadeIn()
-			$('.tr-popup').fadeIn()
-		}
+    async function Download(url) {
+      const response = await fetch(url)
+      const buf = await response.arrayBuffer() // TODO: how to handle .json() if failed and pdf if succeeded
 
-		function HidePopup() {
-			$('.tr-overlay').fadeOut()
-			$('.tr-popup').fadeOut()
-		}
+      //if (response.status !== 200)
+      //    throw message // TODO standard response
 
-		function SetPic() {
-			var countFiles = $('#fileUpload')[0].files.length
-			var imgPath = $('#fileUpload')[0].value
-			var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase()
-			var image_holder = $(".tr-photo-thumbnail")
-			var remove = $(".tr-button-remove")
-			var error = $("#upload-error")
-			image_holder.empty()
+      return buf
+    }
 
-			if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
-				if (typeof (FileReader) != "undefined") {
-					for (var i = 0; i < countFiles; i++) {
-						var reader = new FileReader()
-						reader.onload = function (e) {
-							$("<img />", {
-								"src": e.target.result,
-								"class": "tr-thumb-image"
-							}).appendTo(image_holder)
-						}
-						image_holder.show()
-						reader.readAsDataURL($('#fileUpload')[0].files[i])
-						remove.show()
-						error.hide()
-						$('#picker-camera-button').hide()
-					}
-				} else {
-					error.show().html("This browser does not support FileReader.")
-				}
-			} else {
-				error.show().text("Please upload a valid image format. Supported formats are: .gif, .png, .jpg, and .jpeg.")
-				remove.hide()
-				image_holder.hide()
-			}
-		}
+    ////
 
-		function RemovePic() {
-			$('.tr-button-remove').hide()
-			$('.tr-thumb-image').remove()
-			$('.tr-photo-thumbnail').hide()
-			$('#picker-camera-button').show()
-		}
+    function Render(buf) {
 
-		//#region Upload file
+      $("<img />", {
+        "src": buf
+      }).appendTo($(tag.viewer))
 
-		tag.uploader = undefined
-		function UploadPic() {
-			// TODO: 3 options
-			//  1: nothing changed since previous submit - don't send anything
-			//  2: just data changed
-			//  3: data and picture changed
-			//var blob = new Blob([JSON.stringify(_State)], { type: "application/json" })
-			//tag.uploader.options.data = { json: blob }
-			if (tag.uploader.anyUploadsPending()) {
-				ShowPopup()
-				tag.uploader.uploadAll()
-			}
-			tag.uploader.options.data = null
-		}
+      tag.rendered = true
+      tag.update()
+    }
 
-		function round(value, digits) {
-			return +value.toFixed(digits)
-		}
+    this.Remove = () => {
+      $(tag.viewer).empty()
+      var input = tag.input
+      input.value = ''  // ensure that we get a 'change' event even if the user chooses the same file hereafter
+      tag.rendered = false
+      tag.update()
+    }
 
-		function percentSign(value) {
-			return round(value * 100, 0) + '%'
-		}
+    this.FileOpen = () => {
+      var input = tag.input
+      console.log(tag._riot_id, input)
+      debugger
 
-		function percent(value) {
-			return round(value * 100, 0)
-		}
+      var countFiles = input.files.length
+      if (countFiles === 0) {
+        return  // cancelled
+      }
+      if (countFiles > 1) {
+        alert('Can only display 1 file') // TODO
+        return
+      }
+      var imgPath = input.value
+      var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase()
 
-		function UploadProgress(uniqueId, name, loaded, total) {
-			var perc = percent(loaded / total)
-			tag.progressBar.Update(perc + '%')
-		}
+      if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+        if (typeof (FileReader) != "undefined") {
+          var file = input.files[0]
+          var reader = new FileReader()
+          reader.onload = function (e) {
+            Render(e.target.result)
+          }
+          reader.readAsDataURL(file)
+        } else {
+          $(tag.error).text("This browser does not support FileReader.")
+        }
+      } else {
+        $(tag.error).text("Please upload a valid image format. Supported formats are: .gif, .png, .jpg, and .jpeg.")
+        Remove()
+      }
+    }
 
-		function UploadComplete(uniqueId, name, response, status, xhr) {
-			console.log(response)
-			response = JSON.parse(response)
-			if (response.result === "success") {
-				HidePopup()
-				NextScreen()
-			} else {
-				// TODO
-				HidePopup()
-				alert('Failed to upload the file to the server. Please try again.')
-			}
-		}
+    //#region Upload file
 
-		function UploadNetworkError(uniqueId, name, response, status, xhr) {
-			// TODO
-			alert('Network error: Failed to upload ' + name)
-			HidePopup()
-		}
+    function UploadPic() {
+      // TODO: 3 options
+      //  1: nothing changed since previous submit - don't send anything
+      //  2: just data changed
+      //  3: data and picture changed
+      //var blob = new Blob([JSON.stringify(_State)], { type: "application/json" })
+      //tag.uploader.options.data = { json: blob }
+      if (tag.uploader.anyUploadsPending()) {
+        ShowPopup()
+        tag.uploader.uploadAll()
+      }
+      tag.uploader.options.data = null
+    }
 
-		function NextScreen() {
-			alert('Next Screen')
-		}
+    function round(value, digits) {
+      return +value.toFixed(digits)
+    }
 
-		///////
+    function percentSign(value) {
+      return round(value * 100, 0) + '%'
+    }
 
-		function initUploader(input, url, doc, uploadProgress, uploadComplete, uploadNetworkError) {
-			var uploader = new Uploader({
-				// Setup
-				existingInput: input,
-				autoUpload: false,
-				// Upload
-				url: url,
-				name: doc,
-				multiple: false,
-				data: null, // set before uploadAll - see UploadPic
-				headers: {
-					//'trustid-csrf': __CSRF TODO session ID
-				}
-			})
-			uploader
-				.on("uploadProgress", function (uniqueId, name, loaded, total) {
-					uploadProgress(uniqueId, name, loaded, total)
-				})
+    function percent(value) {
+      return round(value * 100, 0)
+    }
 
-				.on("uploadComplete", function (uniqueId, name, response, status, xhr) {
-					if (status === 200) {
-						// success
-						uploadComplete(uniqueId, name, response, status, xhr)
-					} else {
-						// error
-						uploadNetworkError(uniqueId, name, response, status, xhr)
-					}
-				})
+    function UploadProgress(uniqueId, name, loaded, total) {
+      var perc = percent(loaded / total)
+      tag.progressBar.Update(perc + '%')
+    }
 
-				.on("uploadAbort", function () {
-					// TODO?
-					console.log("uploadAbort", arguments)
-				})
+    function UploadComplete(uniqueId, name, response, status, xhr) {
+      console.log(response)
+      response = JSON.parse(response)
+      if (response.result === "success") {
+        HidePopup()
+        NextScreen()
+      } else {
+        // TODO
+        HidePopup()
+        alert('Failed to upload the file to the server. Please try again.')
+      }
+    }
 
-				.on("uploadFail", function () {
-					// TODO
-					console.log("uploadFail", arguments)
-				})
+    function UploadNetworkError(uniqueId, name, response, status, xhr) {
+      // TODO
+      alert('Network error: Failed to upload ' + name)
+      HidePopup()
+    }
 
-			return uploader
-		}
+    function NextScreen() {
+      alert('Next Screen')
+    }
+
+    ///////
+
+    function initUploader(input, url, doc, uploadProgress, uploadComplete, uploadNetworkError) {
+      var uploader = new Uploader({
+        // Setup
+        existingInput: input,
+        autoUpload: false,
+        // Upload
+        url: url,
+        name: doc,
+        multiple: false,
+        data: null, // set before uploadAll - see UploadPic
+        headers: {
+          //'trustid-csrf': __CSRF TODO session ID
+        }
+      })
+      uploader
+        .on("uploadProgress", function (uniqueId, name, loaded, total) {
+          uploadProgress(uniqueId, name, loaded, total)
+        })
+
+        .on("uploadComplete", function (uniqueId, name, response, status, xhr) {
+          if (status === 200) {
+            // success
+            uploadComplete(uniqueId, name, response, status, xhr)
+          } else {
+            // error
+            uploadNetworkError(uniqueId, name, response, status, xhr)
+          }
+        })
+
+        .on("uploadAbort", function () {
+          // TODO?
+          console.log("uploadAbort", arguments)
+        })
+
+        .on("uploadFail", function () {
+          // TODO
+          console.log("uploadFail", arguments)
+        })
+
+      return uploader
+    }
 
     //#endregion
-
   </script>
 </pdf-img-viewer-uploader>
