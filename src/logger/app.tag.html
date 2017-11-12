@@ -1,0 +1,23 @@
+<app>
+  <h1>Logger</h1>
+  <button onclick={ generate }>Add</button>
+  <button onclick={ clearLogs }>Clear</button>
+  <logs logs={ logs }></logs>
+
+  <style>
+  </style>
+
+  <script>
+    import './logs.tag.html'
+
+    this.logs = []
+
+    this.generate = (e) => {
+      this.logs.push({ title: 'hello', body: 'some panel body text' })
+    }
+
+    this.clearLogs = (e) => {
+      this.logs = []
+    }
+  </script>
+</app>
